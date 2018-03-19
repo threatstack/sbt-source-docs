@@ -21,6 +21,19 @@ tutTargetDirectory := crossTarget.value / "docs"
 ```
 
 Files will be run through both `source-docs` and `tut` and will end up in the `docs` folder of the target directory.
+At this point, `sbt-source-docs` and `tut` can co-exist in the same markdown file.
+However, `sbt-source-docs` can also be used to pull from source code and evaluate it in `tut` 
+
+To enable this you will need to further annotate the code fence to indicate that `sbt-source-docs` should output `tut` instead of `scala`:
+
+    ```
+    ```source-docs/tut
+    file src/main/scala/Main.scala 0 4
+    ```
+    ```
+
+Now if you run `sbt-source-docs` followed by `tut`, the code that was pulled in from your source directory will be evaluated by `tut` when it runs.
+You can substitute `tut` with any of the existing [tut modifiers](http://tpolecat.github.io/tut//modifiers.html).
 
 ## Reveal
 [Revealjs](https://revealjs.com/#/) is a tool for building presentations. 

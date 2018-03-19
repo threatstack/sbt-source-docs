@@ -28,7 +28,7 @@ trait MarkdownParser {
         for {
           fenceContents <- parseFence(tail, List.empty)
           fenceReplacement <- insertCorrectBits(srcFiles)(fenceContents)
-          withFence = scalaSyntaxFence(fenceReplacement)
+          withFence = scalaSyntaxFence(head, fenceReplacement)
           continued <- parse(srcFiles)(remaining.drop(fenceContents.length + 2), accumulate ++ withFence)
         } yield continued
       case head :: tail =>
@@ -56,8 +56,19 @@ trait MarkdownParser {
       case a: AssignmentReplacement => replaceWithAssignment(srcFiles, a)
     }
 
-  def scalaSyntaxFence(contents: List[String]): List[String] =
-    s"$Fence$ScalaInfoString" +: contents :+ Fence
+  def scalaSyntaxFence(header: String, contents: List[String]): List[String] =
+    determineFenceType(header) +: contents :+ Fence
+
+  def determineFenceType(fenceLine: String): String = {
+    val annotation = fenceLine.replace(Fence, "")
+
+    val separatorIndex = annotation.indexOf("/")
+
+    val fenceType =
+      if (separatorIndex < 0) ScalaInfoString
+      else annotation.substring(separatorIndex + 1)
+    s"$Fence$fenceType"
+  }
 
   def replaceWithFileSource(files: Map[String, File], replacement: FileReplacement): Either[Throwable, List[String]] = {
     val fileOpt = files.get(replacement.filename)
