@@ -14,7 +14,21 @@
 <span class="n">tutTargetDirectory</span> <span class="o">:=</span> <span class="n">crossTarget</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="s">"docs"</span>
 </code></pre></div></div>
 
-<p>Files will be run through both <code class="highlighter-rouge">source-docs</code> and <code class="highlighter-rouge">tut</code> and will end up in the <code class="highlighter-rouge">docs</code> folder of the target directory.</p>
+<p>Files will be run through both <code class="highlighter-rouge">source-docs</code> and <code class="highlighter-rouge">tut</code> and will end up in the <code class="highlighter-rouge">docs</code> folder of the target directory.
+At this point, <code class="highlighter-rouge">sbt-source-docs</code> and <code class="highlighter-rouge">tut</code> can co-exist in the same markdown file.
+However, <code class="highlighter-rouge">sbt-source-docs</code> can also be used to pull from source code and evaluate it in <code class="highlighter-rouge">tut</code></p>
+
+<p>To enable this you will need to further annotate the code fence to indicate that <code class="highlighter-rouge">sbt-source-docs</code> should output <code class="highlighter-rouge">tut</code> instead of <code class="highlighter-rouge">scala</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```
+```source-docs/tut
+file src/main/scala/Main.scala 0 4
+```
+```
+</code></pre></div></div>
+
+<p>Now if you run <code class="highlighter-rouge">sbt-source-docs</code> followed by <code class="highlighter-rouge">tut</code>, the code that was pulled in from your source directory will be evaluated by <code class="highlighter-rouge">tut</code> when it runs.
+You can substitute <code class="highlighter-rouge">tut</code> with any of the existing <a href="http://tpolecat.github.io/tut//modifiers.html">tut modifiers</a>.</p>
 
 <h2 id="reveal">Reveal</h2>
 <p><a href="https://revealjs.com/#/">Revealjs</a> is a tool for building presentations. 
